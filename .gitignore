@@ -4,3 +4,5 @@ node_modules
 .vscode/
 .yarn/cache
 .yarn/install-state.gzß
+.env
+src/lib/sanity/.env.local

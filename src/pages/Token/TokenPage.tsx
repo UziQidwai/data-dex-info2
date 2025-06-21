@@ -44,6 +44,9 @@ import { useParams } from 'react-router-dom'
 import { Trace } from '@uniswap/analytics'
 import { ChainId } from '@vanadex/sdk-core'
 import Modal from 'components/Modal'
+import TokenDescription from 'components/TokenDescription'
+
+
 
 const PriceText = styled(TYPE.label)`
   font-size: 36px;
@@ -194,6 +197,10 @@ export default function TokenPage() {
   const transactions = useTokenTransactions(formattedAddress)
   const chartData = useTokenChartData(formattedAddress)
 
+  //const { tokenAddress } = useParams<{ tokenAddress: string }>()
+  const tokenAddress = formattedAddress
+
+
   // check for link to CMC
   const cmcLink = useCMCLink(formattedAddress)
 
@@ -233,7 +240,7 @@ export default function TokenPage() {
   // source toggles
   const [chartSource, setChartSource] = useState(ChartSource.DEXSCREENER)
   const [transactionSource, setTransactionSource] = useState(TransactionSource.DEXSCREENER)
-  
+
   // trade modal state
   const [showTradeModal, setShowTradeModal] = useState(false)
 
@@ -261,7 +268,7 @@ export default function TokenPage() {
   // DexScreener URLs
   const dexscreenerChartUrl = `https://dexscreener.com/vana/${formattedAddress}?embed=1&theme=dark&trades=0&info=0`
   const dexscreenerTransactionsUrl = `https://dexscreener.com/vana/${formattedAddress}?embed=1&theme=dark&chart=0&info=0`
-  
+
   // Trade URLs
   const swapIframeUrl = `https://www.datadex.com/#/swap?outputCurrency=${formattedAddress}`
   const directSwapUrl = `https://www.datadex.com/#/swap?outputCurrency=${formattedAddress}`
@@ -355,6 +362,7 @@ export default function TokenPage() {
                 </ResponsiveRow>
               </AutoColumn>
               <ContentLayout>
+
                 <DarkGreyCard>
                   <AutoColumn $gap="lg">
                     <AutoColumn $gap="4px">
@@ -386,26 +394,31 @@ export default function TokenPage() {
                 </DarkGreyCard>
                 <AutoColumn $gap="8px">
                   <>
-                    <SectionHeader>
-                      <TYPE.main>Info</TYPE.main>
-                      <SmallToggleWrapper>
-                        <ToggleElementFree
-                          isActive={chartSource === ChartSource.DEXSCREENER}
-                          fontSize="12px"
-                          onClick={() => setChartSource(ChartSource.DEXSCREENER)}
-                        >
-                          Dex
-                        </ToggleElementFree>
-                        <ToggleElementFree
-                          isActive={chartSource === ChartSource.NATIVE}
-                          fontSize="12px"
-                          onClick={() => setChartSource(ChartSource.NATIVE)}
-                        >
-                          Native
-                        </ToggleElementFree>
-                      </SmallToggleWrapper>
-                    </SectionHeader>
-                    
+
+                    <AutoColumn $gap="16px">
+                      <TokenDescription tokenAddress={tokenAddress} /> {/* ✅ No overlap */}
+                      <RowBetween>
+                        <TYPE.main>Chart</TYPE.main>
+                        <SmallToggleWrapper>
+                          <ToggleElementFree
+                            isActive={chartSource === ChartSource.DEXSCREENER}
+                            fontSize="12px"
+                            onClick={() => setChartSource(ChartSource.DEXSCREENER)}
+                          >
+                            Dex
+                          </ToggleElementFree>
+                          <ToggleElementFree
+                            isActive={chartSource === ChartSource.NATIVE}
+                            fontSize="12px"
+                            onClick={() => setChartSource(ChartSource.NATIVE)}
+                          >
+                            Native
+                          </ToggleElementFree>
+                        </SmallToggleWrapper>
+                      </RowBetween>
+                    </AutoColumn>
+
+
                     {(chartSource === ChartSource.DEXSCREENER) ? (
                       <DarkGreyCardNoPadding>
                         <DexScreenerIframe
@@ -507,6 +520,9 @@ export default function TokenPage() {
                   </>
                 </AutoColumn>
               </ContentLayout>
+
+
+
               <TYPE.main>Pools</TYPE.main>
               <DarkGreyCard>
                 <PoolTable poolDatas={poolDatas} />
@@ -552,7 +568,7 @@ export default function TokenPage() {
         ) : (
           <Loader />
         )}
-        
+
         {/* Trade Modal */}
         <Modal isOpen={showTradeModal} onDismiss={() => setShowTradeModal(false)} maxWidth={`480px`}>
           <TradeModalContent>
@@ -571,7 +587,7 @@ export default function TokenPage() {
                 </IconButton>
               </HeaderIcons>
             </ModalHeader>
-            
+
             <TradeIframe
               src={swapIframeUrl}
               title="Datadex Swap"

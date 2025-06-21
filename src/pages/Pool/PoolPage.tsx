@@ -30,8 +30,15 @@ import { EthereumNetworkInfo } from 'constants/networks'
 import { GenericImageWrapper } from 'components/Logo'
 import { Navigate, useParams } from 'react-router-dom'
 import { Trace } from '@uniswap/analytics'
-import { InterfacePageName } from '@uniswap/analytics-events'
 import { ChainId } from '@vanadex/sdk-core'
+//import { InterfacePageName } from '@uniswap/analytics-events'
+
+
+// InterfacePageName is not defined in the original code, so we define it here
+// this is only to replace the missing import for uniswap analytics which we do not use
+enum InterfacePageName {
+  POOL_PAGE = 'POOL_PAGE'
+}
 
 const ContentLayout = styled.div`
   display: grid;
